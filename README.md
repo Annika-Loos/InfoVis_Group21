@@ -9,8 +9,9 @@ Report for Assignement 1: https://www.overleaf.com/project/673312f01e94a3f312831
 ├── style.css        # (Optional) CSS file for styling the visualization
 ├── data/            # Data Folder containing the CSV dataset files
 │   ├── artisdata.csv  # Initial dataset
-│   ├── data.csv       # Dataset used for Visualization
+│   ├── data.csv       # Dataset used for visualization
 ├── README.md        # Documentation for the project
+├── analysis.ipynb   # Data analysis for assignment 1 and creating of data.csv
 ```
 
 
