@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Exhibitions Visualization</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="script.js" defer></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 95%;
+        }
+
+        #filters-section, #stats-section, #plot-section {
+            flex: 1;
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #filters-section h2,
+        #stats-section h2,
+        #plot-section h2 {
+            margin-top: 0;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        #filters {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        #filters label {
+            font-weight: bold;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #visualization {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Artist Exhibitions Visualization</h1>
+
+    <div id="container">
+        <!-- Filters Section -->
+        <div id="filters-section">
+            <h2>Filters</h2>
+            <div id="filters">
+                <label for="nationality">Nationality:</label>
+                <select id="nationality"></select>
+
+                <label for="status">Dead or Alive at time of exhibition:</label>
+                <select id="status"></select>
+
+                <label for="gender">Gender:</label>
+                <select id="gender"></select>
+
+                <button id="applyFilters">Apply Filters</button>
+            </div>
+        </div>
+
+        <!-- Plot Section -->
+        <div id="plot-section">
+            <h2>Top 10 Early Successful Artists (under 30) from 1905-1915</h2>
+            <div id="visualization"></div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div id="stats-section">
+            <h2>Statistics</h2>
+            <p><strong>Paintings:</strong> <span id="paintingCount">0</span></p>
+            <p><strong>Countries:</strong> <span id="countryCount">0</span></p>
+            <p><strong>Cities:</strong> <span id="cityCount">0</span></p>
+            <p><strong>Exhibitions:</strong> <span id="exhibitionCount">0</span></p>
+        </div>
+    </div>
+</body>
+</html>
