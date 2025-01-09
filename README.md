@@ -1,6 +1,7 @@
 # InfoVis_Group21
 
 Report for Assignement 1: https://www.overleaf.com/project/673312f01e94a3f312831753
+Report for Assignement 1: https://www.overleaf.com/9127966665mxxqxjpmyddw#3b9ae2
 
 ```
 .
