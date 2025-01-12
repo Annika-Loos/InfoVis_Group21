@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Raw Data:", dataset);
 
         // Nationality filter
-        const nationalities = Array.from(new Set(dataset.map(d => d.nationality)));
+        const nationalities = Array.from(new Set(dataset.map(d => d.nationality))).sort();
         const nationalityDropdown = d3.select("#nationality");
         nationalityDropdown.append("option").text("All").attr("value", "All");
         nationalities.forEach(nationality => {
@@ -31,11 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
             statusDropdown.append("option").text(status).attr("value", status);
         });
 
+        // age filter
+        const ages = Array.from(new Set(dataset.map(d => d.age_at_exhibition))).sort();
+        const agesDropdown = d3.select("#age");
+        ages.forEach(age => {
+            agesDropdown.append("option").text(age).attr("value", age);
+        });
+
         // Attach filter functionality to the button
         document.getElementById("applyFilters").addEventListener("click", () => {
             const selectedNationality = document.getElementById("nationality").value;
             const selectedStatus = document.getElementById("status").value;
             const selectedGender = document.getElementById("gender").value;
+            const selectedAge = document.getElementById("age").value;
 
             // Filter data based on selections
             let filteredData = dataset;
@@ -51,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (selectedGender !== "All") {
                 filteredData = filteredData.filter(d => d.gender === selectedGender);
             }
+
+            filteredData = filteredData.filter(d => d.age_at_exhibition <= selectedAge);
 
             console.log("Filtered Data:", filteredData);
 
@@ -132,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Draw scatter points
         artistYearData.forEach((years, artist) => {
             years.forEach((records, year) => {
+      //          const paintingCount = records.reduce((sum, row) => sum + (+row.paintings || 0), 0);
                 svg.append("circle")
                     .attr("cx", x(year))
                     .attr("cy", y(artist) + y.bandwidth() / 2)
@@ -139,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .attr("fill", colorScale(artist))
                     .append("title")
                     .text(`${artist}, ${year}: ${records.length} exhibitions`);
-            });
+                });
         });
     }
 
@@ -156,4 +167,3 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("exhibitionCount").textContent = exhibitionCount;
     }
 });
-
