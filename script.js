@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // age filter
-        const ages = Array.from(new Set(dataset.map(d => d.age_at_exhibition))).sort();
-        const agesDropdown = d3.select("#age");
-        ages.forEach(age => {
-            agesDropdown.append("option").text(age).attr("value", age);
-        });
+        // const ages = Array.from(new Set(dataset.map(d => d.age_at_exhibition))).sort();
+        // const agesDropdown = d3.select("#age");
+        // ages.forEach(age => {
+        //     agesDropdown.append("option").text(age).attr("value", age);
+        // });
 
         // Attach filter functionality to the button
         document.getElementById("applyFilters").addEventListener("click", () => {
@@ -142,14 +142,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Draw scatter points
         artistYearData.forEach((years, artist) => {
             years.forEach((records, year) => {
-      //          const paintingCount = records.reduce((sum, row) => sum + (+row.paintings || 0), 0);
+                const paintingCount = records.reduce((sum, row) => sum + (+row.paintings || 0), 0);
                 svg.append("circle")
                     .attr("cx", x(year))
                     .attr("cy", y(artist) + y.bandwidth() / 2)
                     .attr("r", 5)
                     .attr("fill", colorScale(artist))
                     .append("title")
-                    .text(`${artist}, ${year}: ${records.length} exhibitions`);
+                    .text(`${artist}, ${year}: ${records.length} exhibitions, ${paintingCount} paintings`)
+                    .on({ "click": function(){
+                        updateMap(artist, year) }});
+                    //  "mouseover": function() { /* do stuff */ },
+                    // "mouseout":  function() { /* do stuff */ }, 
                 });
         });
     }

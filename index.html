@@ -70,6 +70,16 @@
             width: 100%;
             height: 400px;
         }
+
+        #map-section {
+            flex: 1;
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -86,8 +96,8 @@
                 <label for="status">Dead or Alive at time of exhibition:</label>
                 <select id="status"></select>
 
-                <label for="age">Maximum age at time of exhibition:</label>
-                <select id="age"></select>
+                <label for="age">Maximum age at time of exhibition (10-98):</label>
+                <input type="number" id="age" min="10" max="98">
 
                 <label for="gender">Gender:</label>
                 <select id="gender"></select>
@@ -110,6 +120,10 @@
             <p><strong>Cities:</strong> <span id="cityCount">0</span></p>
             <p><strong>Exhibitions:</strong> <span id="exhibitionCount">0</span></p>
         </div>
+    </div>
+    <div id="map-section">
+        <h2>Activity of Selected Artist and Year</h2>
+        <div id="visualization2"></div>
     </div>
 </body>
 </html>
