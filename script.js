@@ -31,13 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
             statusDropdown.append("option").text(status).attr("value", status);
         });
 
-        // age filter
-        // const ages = Array.from(new Set(dataset.map(d => d.age_at_exhibition))).sort();
-        // const agesDropdown = d3.select("#age");
-        // ages.forEach(age => {
-        //     agesDropdown.append("option").text(age).attr("value", age);
-        // });
-
         // Attach filter functionality to the button
         document.getElementById("applyFilters").addEventListener("click", () => {
             const selectedNationality = document.getElementById("nationality").value;
@@ -143,17 +136,21 @@ document.addEventListener('DOMContentLoaded', () => {
         artistYearData.forEach((years, artist) => {
             years.forEach((records, year) => {
                 const paintingCount = records.reduce((sum, row) => sum + (+row.paintings || 0), 0);
+                const elementID = artist.split(" ").slice(-1) + year;
                 svg.append("circle")
                     .attr("cx", x(year))
                     .attr("cy", y(artist) + y.bandwidth() / 2)
                     .attr("r", 5)
                     .attr("fill", colorScale(artist))
+                    .attr("id", elementID)
                     .append("title")
                     .text(`${artist}, ${year}: ${records.length} exhibitions, ${paintingCount} paintings`)
-                    .on({ "click": function(){
-                        updateMap(artist, year) }});
-                    //  "mouseover": function() { /* do stuff */ },
-                    // "mouseout":  function() { /* do stuff */ }, 
+
+                // make each data point a button
+                svg.select("#" + elementID)
+                    .on("click", function() {
+                        updateBar(records);
+                    });
                 });
         });
     }
@@ -169,5 +166,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("countryCount").textContent = countryCount;
         document.getElementById("cityCount").textContent = cityCount;
         document.getElementById("exhibitionCount").textContent = exhibitionCount;
+    }
+
+    // Function to update bar chart
+    function updateBar(records) {
+        // initialization
+        const margin = { top: 20, right: 30, bottom: 50, left: 150 };
+        const width = 800 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+
+        // const svg = d3.select("#visualization_bar")
+        //     .append("svg")
+        //     .attr("width", width + margin.left + margin.right)
+        //     .attr("height", height + margin.top + margin.bottom)
+        //     .append("g")
+        //     .attr("transform", `translate(${margin.left},${margin.top})`);
     }
 });

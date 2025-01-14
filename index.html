@@ -63,7 +63,7 @@
             background-color: #0056b3;
         }
 
-        #visualization {
+        #visualization, #visualization_bar {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -71,7 +71,7 @@
             height: 400px;
         }
 
-        #map-section {
+        #bar-chart-section {
             flex: 1;
             margin: 10px;
             padding: 15px;
@@ -79,6 +79,7 @@
             border-radius: 5px;
             background-color: #f9f9f9;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
     </style>
 </head>
@@ -106,10 +107,10 @@
             </div>
         </div>
 
-        <!-- Plot Section -->
+        <!-- Scatter Plot Section -->
         <div id="plot-section">
             <h2>Top 10 Early Successful Artists from 1905-1915</h2>
-            <div id="visualization"></div>
+            <div id="visualization"></div>  
         </div>
 
         <!-- Statistics Section -->
@@ -121,9 +122,10 @@
             <p><strong>Exhibitions:</strong> <span id="exhibitionCount">0</span></p>
         </div>
     </div>
-    <div id="map-section">
+    <!-- Bar Plot Section -->
+    <div id="bar-chart-section">
         <h2>Activity of Selected Artist and Year</h2>
-        <div id="visualization2"></div>
+        <div id="visualization_bar"></div>
     </div>
 </body>
 </html>
