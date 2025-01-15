@@ -176,9 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("barTitle").textContent = artist + " (" + year + ")";
 
         // initialization
-        const margin = { top: 20, right: 30, bottom: 50, left: 150 };
+        const margin = { top: 20, right: 150, bottom: 50, left: 150 };
         const width = 800 - margin.left - margin.right;
-        const height = 400 - margin.top - margin.bottom;
+        const height = 300 - margin.top - margin.bottom;
 
         // Preprocess data
         const parsed = d3.rollups(records, v => v.length, d => d.country);
@@ -201,6 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const y = d3.scaleLinear()
                 .domain([0, d3.max(exhibitions)])
                 .range([height, 0]);
+            //    .padding(0.1);
+
+        const yAxisTicks = y.ticks()
+            .filter(tick => Number.isInteger(tick));
+        const yAxis = d3.axisLeft(y)
+            .tickValues(yAxisTicks)
+            .tickFormat(d3.format('d'));
 
         // Axes
         svg.append("g")
