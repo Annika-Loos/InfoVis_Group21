@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Raw Data:", dataset);
 
         // Nationality filter
-        const nationalities = Array.from(new Set(dataset.map(d => d.nationality)));
+        const nationalities = Array.from(new Set(dataset.map(d => d.nationality))).sort();
         const nationalityDropdown = d3.select("#nationality");
         nationalityDropdown.append("option").text("All").attr("value", "All");
         nationalities.forEach(nationality => {
@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const selectedNationality = document.getElementById("nationality").value;
             const selectedStatus = document.getElementById("status").value;
             const selectedGender = document.getElementById("gender").value;
+            const selectedAge = document.getElementById("age").value;
 
             // Filter data based on selections
             let filteredData = dataset;
@@ -51,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (selectedGender !== "All") {
                 filteredData = filteredData.filter(d => d.gender === selectedGender);
             }
+
+            filteredData = filteredData.filter(d => d.age_at_exhibition <= selectedAge);
 
             console.log("Filtered Data:", filteredData);
 
@@ -132,14 +135,23 @@ document.addEventListener('DOMContentLoaded', () => {
         // Draw scatter points
         artistYearData.forEach((years, artist) => {
             years.forEach((records, year) => {
+                const paintingCount = records.reduce((sum, row) => sum + (+row.paintings || 0), 0);
+                const elementID = artist.split(" ").slice(-1) + year;
                 svg.append("circle")
                     .attr("cx", x(year))
                     .attr("cy", y(artist) + y.bandwidth() / 2)
                     .attr("r", 5)
                     .attr("fill", colorScale(artist))
+                    .attr("id", elementID)
                     .append("title")
-                    .text(`${artist}, ${year}: ${records.length} exhibitions`);
-            });
+                    .text(`${artist}, ${year}: ${records.length} exhibitions, ${paintingCount} paintings`)
+
+                // make each data point a button
+                svg.select("#" + elementID)
+                    .on("click", function() {
+                        updateBar(artist, year, records);
+                    });
+                });
         });
     }
 
@@ -155,5 +167,66 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("cityCount").textContent = cityCount;
         document.getElementById("exhibitionCount").textContent = exhibitionCount;
     }
-});
 
+    // Function to update bar chart
+    function updateBar(artist, year, records) {
+        // Clear the existing visualization
+        d3.select("#visualization_bar").html("");
+
+        document.getElementById("barTitle").textContent = artist + " (" + year + ")";
+
+        // initialization
+        const margin = { top: 20, right: 150, bottom: 50, left: 150 };
+        const width = 800 - margin.left - margin.right;
+        const height = 300 - margin.top - margin.bottom;
+
+        // Preprocess data
+        const parsed = d3.rollups(records, v => v.length, d => d.country);
+        const countries = parsed.map(d => d[0]);
+        const exhibitions = parsed.map(d => d[1]);
+
+        const svg = d3.select("#visualization_bar")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Scales
+        const x = d3.scaleBand()
+                .domain(countries)
+                .range([0, width])
+                .padding(0.1);
+
+        const y = d3.scaleLinear()
+                .domain([0, d3.max(exhibitions)])
+                .range([height, 0]);
+            //    .padding(0.1);
+
+        const yAxisTicks = y.ticks()
+            .filter(tick => Number.isInteger(tick));
+        const yAxis = d3.axisLeft(y)
+            .tickValues(yAxisTicks)
+            .tickFormat(d3.format('d'));
+
+        // Axes
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x));
+
+        svg.append("g")
+            .call(d3.axisLeft(y));
+
+        // Create bars
+        svg.selectAll(".bar")
+            .data(parsed)
+            .enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d[0]))
+            .attr("y", d => y(d[1]))
+            .attr("width", x.bandwidth())
+            .attr("height", d => height - y(d[1]))
+            .attr("fill", "steelblue");
+    }
+});
